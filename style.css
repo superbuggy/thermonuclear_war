@@ -1,0 +1,15 @@
+body {
+  background-color: black;
+  background-image: url("background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+p {
+  font-family: monospace;
+  font-size: 24px;
+  color: green;
+  background-color: rgba(0,0,0,.8);
+
+  margin: 2em;
+}
