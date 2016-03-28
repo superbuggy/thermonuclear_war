@@ -20,7 +20,7 @@ function buildDeck() {
 
 
 //"I had no choice! They arrived right before you did."
-//Selects a whole number with an upper-bound of 'max', or 52 if no args present
+//Selects a whole number with an exclusionary upper-bound of 'max', or 52 if no args present
 function randoCalrissian( max ){
   if ( max === undefined ){
     return Math.floor(Math.random() * 52);
@@ -50,7 +50,7 @@ function printDeck() {
   for (i = 0; i < gameDeck.length - 1; i++ ) {
     printedDeck+=gameDeck[i].rank + gameDeck[i].suitSym + ", ";
   }
-  //Prints without comma
+  //Prints last item without comma
   printedDeck+=gameDeck[gameDeck.length - 1].rank + gameDeck[gameDeck.length - 1].suitSym;
   return printedDeck;
 }
