@@ -17,3 +17,42 @@ function buildDeck() {
     }
   }
 }
+
+
+//"I had no choice! They arrived right before you did."
+//Selects a whole number with an upper-bound of 'max', or 52 if no args present
+function randoCalrissian(max){
+  if (max===undefined){
+    return Math.floor(Math.random() * 52);
+  } else {
+    return Math.floor(Math.random() * max);
+  }
+}
+
+
+// Implementation of https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Modern_method
+// Looked at some code, but it didn't immediately made sense to me, so I navigated to the the above URL.
+function shuffle() {
+  var shuffledDeck = [];
+  var randomCardIndex;
+  while (gameDeck.length > 0){
+    randomCardIndex = randoCalrissian(gameDeck.length);
+    shuffledDeck.unshift(gameDeck[randomCardIndex]);
+    //Consider passing the line below as an argument to the unshift expression above
+    gameDeck.splice(randomCardIndex, 1);
+  }
+  //Copies shuffled deck to gameDeck
+  gameDeck = shuffledDeck.slice(0);
+}
+
+function printDeck() {
+  var printedDeck="";
+  for (i=0; i < gameDeck.length; i++){
+    printedDeck+=gameDeck[i].rank + gameDeck[i].suitSym + ", ";
+  }
+  return printedDeck;
+}
+
+function print(arg){
+  console.log(arg);
+}
