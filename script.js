@@ -38,7 +38,9 @@ function shuffle() {
   while ( gameDeck.length > 0 ) {
     randomCardIndex = randoCalrissian( gameDeck.length );
     shuffledDeck.unshift( gameDeck[randomCardIndex] );
-    //Consider passing the line below as an argument to the unshift expression above (when I tried, got an array full of NaNs)
+    //TO DO: Figure out why I got an array full of NaNs when I tried
+    //shuffledDeck.unshift( gameDeck.splice(randomCardIndex, 1) );
+    //in place of the line below
     gameDeck.splice(randomCardIndex, 1);
   }
   //Copies shuffled deck to gameDeck
@@ -57,4 +59,12 @@ function printDeck() {
 
 function print( arg ){
   console.log( arg );
+}
+
+function dealCards() {
+  buildDeck();
+  shuffle();
+  //copies the deck and splits it between the two players
+  var deckOne=gameDeck.slice(0);
+  var deckTwo=gameDeck.splice(26);
 }
