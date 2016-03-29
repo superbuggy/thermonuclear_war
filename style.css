@@ -1,15 +1,30 @@
 body {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.8);
   background-image: url("background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-p {
+.konsole-kontainer {
   font-family: monospace;
   font-size: 24px;
   color: green;
-  background-color: rgba(0,0,0,.8);
+  background-color: rgba(0, 0, 0, 0.8);
+  margin: .5em;
+  min-height: 600px;
 
-  margin: 2em;
+}
+
+.konsole-tekst {
+  margin: .5em;
+}
+
+input {
+  background-color: rgba(0, 0, 0, 0.8);
+  font-family: monospace;
+  font-size: 24px;
+  color: green;
+  border 0px;
+  border-color: = rgba(0, 0, 0, .8);
+  margin-top: 550px;
 }
