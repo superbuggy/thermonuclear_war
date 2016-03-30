@@ -56,12 +56,6 @@ function randoCalrissian( max ){
 // Implementation of "Modern Method" Fisher-Yates procedure outlined on wikipedia:
 // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Modern_method
 function shuffle(deck, numOfShuffles) {
-  if (!deck) { // I'd make it so this function HAS to take a deck
-    deck = gameDeck;
-  }
-  if (!numOfShuffles) {
-     numOfShuffles = 1;
-  }
   var tempDeck = deck.slice(0);
   var shuffledDeck = [];
   var randomCardIndex;
@@ -85,21 +79,6 @@ function dealCards() {
   playerTwoDeck = playerTwoDeck.concat(gameDeck.slice(0).splice(26, 26));
 }
 
-
-
-//Function requires 2 card objects being passed in, evaluates the higher-ranked card by
-//comparing each card's rank against the master array of card ranks.
-function getWinner( playerOneCard , playerTwoCard ) {
-
-  if (playerOneCard.rankPower > playerTwoCard.rankPower) {
-    return "one";
-  } else if (playerOneCard.rankPower < playerTwoCard.rankPower) {
-    return "two";
-  } else if (playerOneCard.rankPower === playerTwoCard.rankPower) {
-    return "war";//FIX? call war func?
-  }
-}
-
 //Function that handles war events
 function ofCourseYouRealizeThisMeans(){
   var warceptionCounter = 0;
@@ -116,15 +95,17 @@ function ofCourseYouRealizeThisMeans(){
       print(playerOneDeck[warIndexCount], playerTwoDeck[warIndexCount]);
       warIndexCount += CARDS_DRAWN_PER_WAR;
     } else {
-      print("Player " + (playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "1" : ((playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "2" : null ) +
-        "has insufficient soldiers to enter into another war. The suit will determine the outcome.");
+      // print("Player " + (playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "1" : ((playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "2" : null ) +
+      //   "has insufficient soldiers to enter into another war. The suit will determine the outcome.");
       if (playerOneDeck[warIndexCount].suitPower > playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (1, warIndexCount);
         print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
+        print("fuckin killin me man");
         break;
       } else if (playerOneDeck[warIndexCount].suitPower < playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (2, warIndexCount);
         print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
+        print("fuckin killin me man");
         break;
       }
     }
@@ -141,7 +122,7 @@ function ofCourseYouRealizeThisMeans(){
 //Plays the game
 function playWar() {
   buildDeck();
-  gameDeck = shuffle();
+  gameDeck = shuffle(gameDeck, 10);
   dealCards();
 
   // Game loop: the above game set-up function calls can be seperated into an initGame function
@@ -152,16 +133,16 @@ function playWar() {
     // var card1 = playerOneDeck.pop();
     // var card2 = playerTwoDeck.pop();
 
-    if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "one" ) {
+    if ( playerOneDeck[0].rankPower > playerTwoDeck[0]) {
       //Player 1 wins; add'l features: number of "battles" won, win-pile, number of win-piles turned over
       print("P1 wins: " + playerOneDeck[0].rank + playerOneDeck[0].suit + " beats " + playerTwoDeck[0].rank + playerTwoDeck[0].suit );
       toTheVictorGo(1,1);
       // playerOneDeck.unshift(card1).unshift(card2)
       // playerOne.takeCards(card1, card2)
-    } else if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "two" ) {
+    } else if ( playerTwoDeck[0].rankPower > playerOneDeck[0] ) {
       print("P2 wins: " + playerTwoDeck[0].rank + playerTwoDeck[0].suit + " beats " + playerOneDeck[0].rank + playerOneDeck[0].suit );
       toTheVictorGo(2,1);
-    } else if (getWinner(playerOneDeck[0], playerTwoDeck[0]) === "war" ) {
+    } else if ( playerOneDeck[0].rankPower === playerTwoDeck[0]) {
       ofCourseYouRealizeThisMeans();
     }
   }
