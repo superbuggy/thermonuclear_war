@@ -3,17 +3,17 @@ function printDeck( deck ) {
   var printedDeck = "";
 
   for (i = 0; i < deck.length - 1; i++ ) {
-    printedDeck += deck[i].rank + deck[i].suitSym + ", ";
+    printedDeck += deck[i].rank + deck[i].suit + ", ";
   }
   //Prints last item without comma
-  printedDeck+=deck[deck.length - 1].rank + deck[deck.length - 1].suitSym;
+  printedDeck+=deck[deck.length - 1].rank + deck[deck.length - 1].suit;
   return printedDeck;
 }
 
 function print( arg ){
   // var textInput = document.getElementByID("konsole-input");
   // var textOutput = document.querySelector(".konsole-tekst");
-  // var outputPass = "";
+  // var pToAppend = document.createElement("p");
   // wrap the arg text in like a p tag, then append the  p or li tag.
   console.log( arg );
 }
@@ -21,20 +21,14 @@ function print( arg ){
 
 // perhaps rename vars for clarity (e.g. playerOneDeck)
 var gameDeck = [], playerOneDeck = [], playerTwoDeck = [];
-var cardSuits = [ "diamonds" , "clubs" , "hearts" , "spades"];
-var cardSuitSymbols = ["♦" , "♣" , "♥" , "♠"];
+var cardSuits = ["♦" , "♣" , "♥" , "♠"];
 var cardRanks = [ "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "J" , "Q" , "K" , "A" ];
 
-//define card object; constructor
-
+//Constructor method for Card objects
 function Card( rankArg, suitArg ) {
   this.rank = rankArg;
   this.rankPower = cardRanks.indexOf(rankArg);
   this.suit = suitArg;
-  // could make cardSuitSymbols an object:
-  // var cardSuitSymbols = { diamonds: "♦" , spades: "♣" , ...};
-  // this.suitSym = cardSuitSymbols[suitArg]
-  this.suitSym = cardSuitSymbols[cardSuits.indexOf(suitArg)];
   this.suitPower = cardSuits.indexOf(suitArg);
 }
 
@@ -155,12 +149,12 @@ function playWar() {
 
     if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "one" ) {
       //Player 1 wins; add'l features: number of "battles" won, win-pile, number of win-piles turned over
-      print("P1 wins: " + playerOneDeck[0].rank + playerOneDeck[0].suitSym + " beats " + playerTwoDeck[0].rank + playerTwoDeck[0].suitSym );
+      print("P1 wins: " + playerOneDeck[0].rank + playerOneDeck[0].suit + " beats " + playerTwoDeck[0].rank + playerTwoDeck[0].suit );
       toTheVictorGo(1,1);
       // playerOneDeck.unshift(card1).unshift(card2)
       // playerOne.takeCards(card1, card2)
     } else if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "two" ) {
-      print("P2 wins: " + playerTwoDeck[0].rank + playerTwoDeck[0].suitSym + " beats " + playerOneDeck[0].rank + playerOneDeck[0].suitSym );
+      print("P2 wins: " + playerTwoDeck[0].rank + playerTwoDeck[0].suit + " beats " + playerOneDeck[0].rank + playerOneDeck[0].suit );
       toTheVictorGo(2,1);
     } else if (getWinner(playerOneDeck[0], playerTwoDeck[0]) === "war" ) {
       ofCourseYouRealizeThisMeans();
