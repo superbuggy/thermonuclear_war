@@ -1,11 +1,9 @@
 //Utility Functions
 function printDeck( deck ) {
   var printedDeck = "";
-  if ( !deck ) {
-    deck = gameDeck;
-  }
+
   for (i = 0; i < deck.length - 1; i++ ) {
-    printedDeck+=deck[i].rank + deck[i].suitSym + ", ";
+    printedDeck += deck[i].rank + deck[i].suitSym + ", ";
   }
   //Prints last item without comma
   printedDeck+=deck[deck.length - 1].rank + deck[deck.length - 1].suitSym;
@@ -13,37 +11,55 @@ function printDeck( deck ) {
 }
 
 function print( arg ){
+  // var textInput = document.getElementByID("konsole-input");
+  // var textOutput = document.querySelector(".konsole-tekst");
+  // var outputPass = "";
+  // wrap the arg text in like a p tag, then append the  p or li tag.
   console.log( arg );
 }
 //End Utility functions
 
-var gameDeck = [], deckOne = [], deckTwo = [];
+// perhaps rename vars for clarity (e.g. playerOneDeck)
+var gameDeck = [], playerOneDeck = [], playerTwoDeck = [];
 var cardSuits = [ "diamonds" , "clubs" , "hearts" , "spades"];
 var cardSuitSymbols = ["♦" , "♣" , "♥" , "♠"];
 var cardRanks = [ "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "J" , "Q" , "K" , "A" ];
 
 //define card object; constructor
-function card( rankArg, suitArg ) {
+
+function Card( rankArg, suitArg ) {
   this.rank = rankArg;
   this.rankPower = cardRanks.indexOf(rankArg);
   this.suit = suitArg;
+  // could make cardSuitSymbols an object:
+  // var cardSuitSymbols = { diamonds: "♦" , spades: "♣" , ...};
+  // this.suitSym = cardSuitSymbols[suitArg]
   this.suitSym = cardSuitSymbols[cardSuits.indexOf(suitArg)];
   this.suitPower = cardSuits.indexOf(suitArg);
 }
 
 function buildDeck() {
-  gameDeck = [];
   for ( rankInc = 0; rankInc <= 12; rankInc++ ){
     for ( suitInc = 0; suitInc <= 3; suitInc++ ){
-      gameDeck.push( new card( cardRanks[rankInc], cardSuits[suitInc] ) );
+      gameDeck.push( new Card( cardRanks[rankInc], cardSuits[suitInc] ) );
     }
+  }
+}
+
+//"I had no choice! They arrived right before you did." - Han BFF
+//Selects a whole number with an [excluded] upper-bound of 'max', or 52 if no argument is present
+function randoCalrissian( max ){
+  if ( max === undefined ){
+    return Math.floor(Math.random() * 52);
+  } else {
+    return Math.floor(Math.random() * max);
   }
 }
 
 // Implementation of "Modern Method" Fisher-Yates procedure outlined on wikipedia:
 // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Modern_method
 function shuffle(deck, numOfShuffles) {
-  if (!deck) {
+  if (!deck) { // I'd make it so this function HAS to take a deck
     deck = gameDeck;
   }
   if (!numOfShuffles) {
@@ -67,19 +83,12 @@ function shuffle(deck, numOfShuffles) {
 
 function dealCards() {
   //copies the deck and splits it between the two players
-  deckOne = deckOne.concat(gameDeck.slice(0).splice(0, 26));
-  deckTwo = deckTwo.concat(gameDeck.slice(0).splice(26, 26));
+  // i might favor 'moving' cards here rather than copying.
+  playerOneDeck = playerOneDeck.concat(gameDeck.slice(0).splice(0, 26));
+  playerTwoDeck = playerTwoDeck.concat(gameDeck.slice(0).splice(26, 26));
 }
 
-//"I had no choice! They arrived right before you did." - Han BFF
-//Selects a whole number with an [excluded] upper-bound of 'max', or 52 if no argument is present
-function randoCalrissian( max ){
-  if ( max === undefined ){
-    return Math.floor(Math.random() * 52);
-  } else {
-    return Math.floor(Math.random() * max);
-  }
-}
+
 
 //Function requires 2 card objects being passed in, evaluates the higher-ranked card by
 //comparing each card's rank against the master array of card ranks.
@@ -98,30 +107,33 @@ function getWinner( playerOneCard , playerTwoCard ) {
 function ofCourseYouRealizeThisMeans(){
   var warceptionCounter = 0;
   var warIndexCount = 0;
-  var deckOneCards = deckOne.length;
-  var deckTwoCards = deckTwo.length;
+  var playerOneDeckCards = playerOneDeck.length;
+  var playerTwoDeckCards = playerTwoDeck.length;
+  var CARDS_DRAWN_PER_WAR = 4;
+
   //While loop deals with iterative war: double war, triple war, quadruple war, etc
-  while ( deckOne[warIndexCount].rankPower === deckTwo[warIndexCount].rankPower ){
+  while ( playerOneDeck[warIndexCount].rankPower === playerTwoDeck[warIndexCount].rankPower ){
     warceptionCounter += 1;
-    if ( (deckOne.length > (warIndexCount+4) ) && (deckTwo.length > (warIndexCount+4) ) ){ //FIX: edge case still possible, is it
-      print(deckOne[warIndexCount], deckTwo[warIndexCount]);
-      warIndexCount += 4;
+    // maybe change 4 to a named constant
+    if ( (playerOneDeck.length > (warIndexCount+CARDS_DRAWN_PER_WAR) ) && (playerTwoDeck.length > (warIndexCount+CARDS_DRAWN_PER_WAR) ) ){ //FIX: edge case still possible, is it
+      print(playerOneDeck[warIndexCount], playerTwoDeck[warIndexCount]);
+      warIndexCount += CARDS_DRAWN_PER_WAR;
     } else {
-      print("Player " + (deckOne.length < (warIndexCount+4)) ? "1" : ((deckOne.length < (warIndexCount+4)) ? "2" : null ) +
+      print("Player " + (playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "1" : ((playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "2" : null ) +
         "has insufficient soldiers to enter into another war. The suit will determine the outcome.");
-      if (deckOne[warIndexCount].suitPower > deckTwo[warIndexCount].suitPower) {
+      if (playerOneDeck[warIndexCount].suitPower > playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (1, warIndexCount);
         print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
-      } else if (deckOne[warIndexCount].suitPower < deckTwo[warIndexCount].suitPower) {
+      } else if (playerOneDeck[warIndexCount].suitPower < playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (2, warIndexCount);
         print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
       }
     }
   }
-  if ( deckOne[warIndexCount].rankPower > deckTwo[warIndexCount].rankPower ) {
+  if ( playerOneDeck[warIndexCount].rankPower > playerTwoDeck[warIndexCount].rankPower ) {
       toTheVictorGo(1, warIndexCount);
       print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
-  } else if ( deckOne[warIndexCount].rankPower < deckTwo[warIndexCount].rankPower ) {
+  } else if ( playerOneDeck[warIndexCount].rankPower < playerTwoDeck[warIndexCount].rankPower ) {
       toTheVictorGo(2, warIndexCount);
       print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
   }
@@ -136,31 +148,38 @@ function playWar() {
   // Game loop: the above game set-up function calls can be seperated into an initGame function
   // The while loop can be removed while its condition could be placed within an if statement for
   // turn-based play, rather than as a "war outcomes simulator"
-  while ( (deckOne.length > 0) && ( deckTwo.length > 0) ) {
-    if ( getWinner(deckOne[0], deckTwo[0]) === "one" ) {
+  while ( (playerOneDeck.length > 0) && ( playerTwoDeck.length > 0) ) {
+    // var card1 = playerOne.getCard();
+    // var card1 = playerOneDeck.pop();
+    // var card2 = playerTwoDeck.pop();
+
+    if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "one" ) {
       //Player 1 wins; add'l features: number of "battles" won, win-pile, number of win-piles turned over
-      print("P1 wins: " + deckOne[0].rank + deckOne[0].suitSym + " beats " + deckTwo[0].rank + deckTwo[0].suitSym );
+      print("P1 wins: " + playerOneDeck[0].rank + playerOneDeck[0].suitSym + " beats " + playerTwoDeck[0].rank + playerTwoDeck[0].suitSym );
       toTheVictorGo(1,1);
-    } else if ( getWinner(deckOne[0], deckTwo[0]) === "two" ) {
-      print("P2 wins: " + deckTwo[0].rank + deckTwo[0].suitSym + " beats " + deckOne[0].rank + deckOne[0].suitSym );
+      // playerOneDeck.unshift(card1).unshift(card2)
+      // playerOne.takeCards(card1, card2)
+    } else if ( getWinner(playerOneDeck[0], playerTwoDeck[0]) === "two" ) {
+      print("P2 wins: " + playerTwoDeck[0].rank + playerTwoDeck[0].suitSym + " beats " + playerOneDeck[0].rank + playerOneDeck[0].suitSym );
       toTheVictorGo(2,1);
-    } else if (getWinner(deckOne[0], deckTwo[0]) === "war" ) {
+    } else if (getWinner(playerOneDeck[0], playerTwoDeck[0]) === "war" ) {
       ofCourseYouRealizeThisMeans();
     }
   }
   //Checking for a win
-  if (deckOne.length === 0) {
+  if (playerOneDeck.length === 0) {
     print("Player Two Wins!");
-  } else if (deckTwo.length === 0) {
+  } else if (playerTwoDeck.length === 0) {
     print("Player One Wins!");
   }
 }
 
 //Assigns appropriate cards to the winner
+// instead of passing in a number, pass in the from deck, to deck
 function toTheVictorGo (victoriousPlayer, indexRange){
   if (victoriousPlayer === 1){
-    deckOne = deckOne.concat(deckTwo.splice(0,indexRange), deckOne.splice(0,indexRange));
+    playerOneDeck = playerOneDeck.concat(playerTwoDeck.splice(0,indexRange), playerOneDeck.splice(0,indexRange));
   } else {
-    deckTwo = deckTwo.concat(deckOne.splice(0,indexRange), deckTwo.splice(0,indexRange));
+    playerTwoDeck = playerTwoDeck.concat(playerOneDeck.splice(0,indexRange), playerTwoDeck.splice(0,indexRange));
   }
 }
