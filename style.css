@@ -11,20 +11,16 @@ body {
   color: green;
   background-color: rgba(0, 0, 0, 0.8);
   margin: .5em;
-  min-height: 600px;
-
 }
 
 .konsole-tekst {
   margin: .5em;
+  min-height: 500px;
+  max-height: 800px;
+  overflow-y: auto;
+  display: block;
 }
 
-input {
-  background-color: rgba(0, 0, 0, 0.8);
-  font-family: monospace;
-  font-size: 24px;
-  color: green;
-  border 0px;
-  border-color: = rgba(0, 0, 0, .8);
-  margin-top: 550px;
+footer {
+  position: sticky;
 }
