@@ -11,9 +11,12 @@ function printDeck( deck ) {
 }
 
 function print( arg ){
-  // var textInput = document.getElementByID("konsole-input");
-  // var textOutput = document.querySelector(".konsole-tekst");
-  // var pToAppend = document.createElement("p");
+  var textInput = document.getElementById("konsole-input").value;
+  var textOutput = document.querySelector(".konsole-tekst");
+  var pToAppend = document.createElement("p");
+  pToAppend.innerHTML = arg;
+  //  var nodeText = document.createTextNode(arg);
+  textOutput.appendChild(pToAppend);
   // wrap the arg text in like a p tag, then append the  p or li tag.
   console.log( arg );
 }
@@ -118,9 +121,11 @@ function ofCourseYouRealizeThisMeans(){
       if (playerOneDeck[warIndexCount].suitPower > playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (1, warIndexCount);
         print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
+        break;
       } else if (playerOneDeck[warIndexCount].suitPower < playerTwoDeck[warIndexCount].suitPower) {
         toTheVictorGo (2, warIndexCount);
         print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
+        break;
       }
     }
   }
