@@ -167,7 +167,7 @@ function ofCourseYouRealizeThisMeans(){
       } else if (warceptionCounter === 6 ) {
         print("GLOBAL THERMONUCLEAR WAR!!!!");
         print("Seriously, the odds of this having occurred are like absurdly low.");
-        print("Holy shhhh");
+        print("Holy sh");
       }
 
       if (playerOneDecisiveCard > playerTwoDecisiveCard) {
