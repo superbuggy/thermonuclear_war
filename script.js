@@ -23,7 +23,9 @@ var gameDeck = [], playerOneDeck = [], playerTwoDeck = [];
 var cardSuits = ["♦" , "♣" , "♥" , "♠"];
 var cardRanks = [ "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "J" , "Q" , "K" , "A" ];
 var warButton = document.getElementById("play-war");
+var warButtonHyper = document.getElementById("play-war-10-times");
 warButton.addEventListener("click", playWar);
+warButtonHyper.addEventListener("click", playWarTenTimes);
 var gameStarted = false;
 
 //Constructor method for Card objects
@@ -84,6 +86,12 @@ function initGame(){
   dealCards();
 }
 
+function playWarTenTimes(){
+  for (i=0; i <= 9; i++){
+    playWar();
+  }
+}
+
 //Plays the game
 function playWar() {
   if (!gameStarted) {
@@ -131,9 +139,9 @@ function ofCourseYouRealizeThisMeans(){
       warceptionCounter++;
     }
   }
-
+  if (warceptionCounter > 1){
   print("It's war-ception! This war is " + warceptionCounter + " wars deep...");
-
+}
   indexOfFinalConflict = warceptionCounter * CARDS_DRAWN_PER_WAR + CARDS_DRAWN_PER_WAR;
     if ( playerOneDeckCards < indexOfFinalConflict || playerTwoDeckCards < indexOfFinalConflict ) {
       // At least one player does have enough cards to continue the war
