@@ -179,10 +179,10 @@ function ofCourseYouRealizeThisMeans(){
       }
 
       if (playerOneDecisiveCard > playerTwoDecisiveCard) {
-        print ("Player 1 emerges victorious, capturing " + indexOfFinalConflict +" cards.");
+        print ("Player 1 emerges victorious, capturing " + indexOfFinalConflict +" enemy cards.");
         playerOneDeck.concat(playerOneDeck.splice(0,indexOfFinalConflict), playerTwoDeck.splice(0,indexOfFinalConflict));
       } else {
-        print ("Player 2 emerges victorious, capturing " + indexOfFinalConflict +" cards.");
+        print ("Player 2 emerges victorious, capturing " + indexOfFinalConflict +" enemy cards.");
         playerTwoDeck.concat(playerTwoDeck.splice(0,indexOfFinalConflict), playerOneDeck.splice(0,indexOfFinalConflict));
       }
     }
