@@ -118,20 +118,21 @@ function playWar() {
 //Function that handles war events
 function ofCourseYouRealizeThisMeans(){
   //warceptionCounter counts the number of consecutive wars
-  print("War breaks out!")
+  print("War breaks out!");
   var warceptionCounter = 0;
   var playerOneDeckCards = playerOneDeck.length;
   var playerTwoDeckCards = playerTwoDeck.length;
-  var minimumDeck = ((playerOneDeckCards < playerTwoDeckCards) ? playerOneDeckCards : playerTwoDeckCards);
+  var minimumDeck = ((playerOneDeckCards <= playerTwoDeckCards) ? playerOneDeckCards : playerTwoDeckCards);
+
   var CARDS_DRAWN_PER_WAR = 4;
   //While loop deals with iterative war: double war, triple war, quadruple war, etc
-  for ( faceUpIndex = 0; faceUpIndex < minimumDeck.length; faceUpIndex += CARDS_DRAWN_PER_WAR ) {
-    if (playerOneDeck[faceUpIndex]===playerTwoDeck[faceUpIndex]) {
+  for ( faceUpIndex = 0; faceUpIndex < minimumDeck; faceUpIndex += CARDS_DRAWN_PER_WAR ) {
+    if (playerOneDeck[faceUpIndex].rankPower===playerTwoDeck[faceUpIndex].rankPower) {
       warceptionCounter++;
     }
   }
 
-  print("It's war-ception! This war is " + warceptionCounter + "wars deep...");
+  print("It's war-ception! This war is " + warceptionCounter + " wars deep...");
 
   indexOfFinalConflict = warceptionCounter * CARDS_DRAWN_PER_WAR + CARDS_DRAWN_PER_WAR;
     if ( playerOneDeckCards < indexOfFinalConflict || playerTwoDeckCards < indexOfFinalConflict ) {
