@@ -156,13 +156,21 @@ function ofCourseYouRealizeThisMeans(){
         print("Player Two Wins!");
       } else if (playerOneBottomCard.rankPower === playerTwoBottomCard.rankPower) {
         if (playerOneBottomCard.suitPower > playerTwoBottomCard.suitPower){
+          print("Player 1's " + playerOneBottomCard.rank + playerOneBottomCard.suit +
+            " beats Player 2's " + playerTwoBottomCard.rank + playerTwoBottomCard.suit);
           print("Player One Wins based on suit-- a rare and narrow victory!");
+          playerOneDeck.concat(playerOneBottomCard, playerTwoBottomCard,
+            playerTwoDeck.splice(0,playerTwoDeck.length - 1));
         } else {
+          print("Player 2's " + playerTwoBottomCard.rank + playerTwoBottomCard.suit +
+            " beats Player 2's " + playerOneBottomCard.rank + playerOneBottomCard.suit);
           print("Player Two Wins based on suit-- a rare and narrow victory!");
+          playerTwoDeck.concat(playerOneBottomCard, playerTwoBottomCard,
+            playerOneDeck.splice(0,playerOneDeck.length - 1));
+
         }
       }
     } else {
-      debugger;
       var playerOneDecisiveCard = playerOneDeck[indexOfFinalConflict].rankPower;
       var playerTwoDecisiveCard = playerTwoDeck[indexOfFinalConflict].rankPower;
 
