@@ -16,6 +16,7 @@ function print( arg ){
   pToAppend.innerHTML = arg;
   textOutput.appendChild(pToAppend);
   console.log( arg );
+  textOutput.scrollTop = textOutput.scrollHeight;
 }
 //End Utility functions
 
@@ -143,7 +144,7 @@ function ofCourseYouRealizeThisMeans(){
   print("It's war-ception! This war is " + warceptionCounter + " wars deep...");
 }
   indexOfFinalConflict = warceptionCounter * CARDS_DRAWN_PER_WAR + CARDS_DRAWN_PER_WAR;
-    if ( playerOneDeckCards < indexOfFinalConflict || playerTwoDeckCards < indexOfFinalConflict ) {
+    if ( playerOneDeckCards <= indexOfFinalConflict || playerTwoDeckCards <= indexOfFinalConflict ) {
       // At least one player does have enough cards to continue the war
       var playerOneBottomCard = playerOneDeck.shift();
       var playerTwoBottomCard = playerTwoDeck.shift();
@@ -161,6 +162,7 @@ function ofCourseYouRealizeThisMeans(){
         }
       }
     } else {
+      debugger;
       var playerOneDecisiveCard = playerOneDeck[indexOfFinalConflict].rankPower;
       var playerTwoDecisiveCard = playerTwoDeck[indexOfFinalConflict].rankPower;
 
