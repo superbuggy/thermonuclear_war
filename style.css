@@ -12,7 +12,6 @@ body {
   text-shadow: 1px 1px 2px #006000;
   background-color: rgba(0, 0, 0, 0.8);
   margin: .5em;
-  overflow: none;
   min-height: 500px;
   max-height: 800px;
   display: block;
