@@ -6,26 +6,25 @@ function printDeck( deck ) {
     printedDeck += deck[i].rank + deck[i].suit + ", ";
   }
   //Prints last item without comma
-  printedDeck+=deck[deck.length - 1].rank + deck[deck.length - 1].suit;
+  printedDeck += deck[deck.length - 1].rank + deck[deck.length - 1].suit;
   return printedDeck;
 }
 
 function print( arg ){
-  var textInput = document.getElementById("konsole-input").value;
   var textOutput = document.querySelector(".konsole-tekst");
   var pToAppend = document.createElement("p");
   pToAppend.innerHTML = arg;
-  //  var nodeText = document.createTextNode(arg);
   textOutput.appendChild(pToAppend);
-  // wrap the arg text in like a p tag, then append the  p or li tag.
   console.log( arg );
 }
 //End Utility functions
 
-// perhaps rename vars for clarity (e.g. playerOneDeck)
 var gameDeck = [], playerOneDeck = [], playerTwoDeck = [];
 var cardSuits = ["♦" , "♣" , "♥" , "♠"];
 var cardRanks = [ "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "J" , "Q" , "K" , "A" ];
+var warButton = document.getElementById("play-war");
+warButton.addEventListener("click", playWar);
+var gameStarted = false;
 
 //Constructor method for Card objects
 function Card( rankArg, suitArg ) {
@@ -72,77 +71,39 @@ function shuffle(deck, numOfShuffles) {
   return shuffledDeck;
 }
 
+//Divides the gameDeck evenly between the 2 players
 function dealCards() {
-  //copies the deck and splits it between the two players
-  // i might favor 'moving' cards here rather than copying.
-  playerOneDeck = playerOneDeck.concat(gameDeck.slice(0).splice(0, 26));
-  playerTwoDeck = playerTwoDeck.concat(gameDeck.slice(0).splice(26, 26));
+  playerOneDeck = gameDeck.splice(0, 26);
+  playerTwoDeck = gameDeck.splice(0, 26);
 }
 
-//Function that handles war events
-function ofCourseYouRealizeThisMeans(){
-  var warceptionCounter = 0;
-  var warIndexCount = 0;
-  var playerOneDeckCards = playerOneDeck.length;
-  var playerTwoDeckCards = playerTwoDeck.length;
-  var CARDS_DRAWN_PER_WAR = 4;
-
-  //While loop deals with iterative war: double war, triple war, quadruple war, etc
-  while ( playerOneDeck[warIndexCount].rankPower === playerTwoDeck[warIndexCount].rankPower ){
-    warceptionCounter += 1;
-    // maybe change 4 to a named constant
-    if ( (playerOneDeck.length > (warIndexCount+CARDS_DRAWN_PER_WAR) ) && (playerTwoDeck.length > (warIndexCount+CARDS_DRAWN_PER_WAR) ) ){ //FIX: edge case still possible, is it
-      print(playerOneDeck[warIndexCount], playerTwoDeck[warIndexCount]);
-      warIndexCount += CARDS_DRAWN_PER_WAR;
-    } else {
-      // print("Player " + (playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "1" : ((playerOneDeck.length < (warIndexCount+CARDS_DRAWN_PER_WAR)) ? "2" : null ) +
-      //   "has insufficient soldiers to enter into another war. The suit will determine the outcome.");
-      if (playerOneDeck[warIndexCount].suitPower > playerTwoDeck[warIndexCount].suitPower) {
-        toTheVictorGo (1, warIndexCount);
-        print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
-        print("fuckin killin me man");
-        break;
-      } else if (playerOneDeck[warIndexCount].suitPower < playerTwoDeck[warIndexCount].suitPower) {
-        toTheVictorGo (2, warIndexCount);
-        print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
-        print("fuckin killin me man");
-        break;
-      }
-    }
-  }
-  if ( playerOneDeck[warIndexCount].rankPower > playerTwoDeck[warIndexCount].rankPower ) {
-      toTheVictorGo(1, warIndexCount);
-      print("Player 1 won a " + warceptionCounter + "-iteration-deep war, taking " + warIndexCount + " cards from Player 2.");
-  } else if ( playerOneDeck[warIndexCount].rankPower < playerTwoDeck[warIndexCount].rankPower ) {
-      toTheVictorGo(2, warIndexCount);
-      print("Player 2 won a  " + warceptionCounter + "iteration-deep war, taking " + warIndexCount + " cards from Player 1.");
-  }
+//Initializes the game
+function initGame(){
+  buildDeck();
+  gameDeck = shuffle(gameDeck, 10);
+  dealCards();
 }
 
 //Plays the game
 function playWar() {
-  buildDeck();
-  gameDeck = shuffle(gameDeck, 10);
-  dealCards();
+  if (!gameStarted) {
+    initGame();
+    gameStarted = true;
+  }
 
-  // Game loop: the above game set-up function calls can be seperated into an initGame function
-  // The while loop can be removed while its condition could be placed within an if statement for
-  // turn-based play, rather than as a "war outcomes simulator"
-  while ( (playerOneDeck.length > 0) && ( playerTwoDeck.length > 0) ) {
-    // var card1 = playerOne.getCard();
-    // var card1 = playerOneDeck.pop();
-    // var card2 = playerTwoDeck.pop();
+  var playerOneTopCard = playerOneDeck.shift();
+  var playerTwoTopCard = playerTwoDeck.shift();
 
-    if ( playerOneDeck[0].rankPower > playerTwoDeck[0]) {
-      //Player 1 wins; add'l features: number of "battles" won, win-pile, number of win-piles turned over
-      print("P1 wins: " + playerOneDeck[0].rank + playerOneDeck[0].suit + " beats " + playerTwoDeck[0].rank + playerTwoDeck[0].suit );
-      toTheVictorGo(1,1);
-      // playerOneDeck.unshift(card1).unshift(card2)
-      // playerOne.takeCards(card1, card2)
-    } else if ( playerTwoDeck[0].rankPower > playerOneDeck[0] ) {
-      print("P2 wins: " + playerTwoDeck[0].rank + playerTwoDeck[0].suit + " beats " + playerOneDeck[0].rank + playerOneDeck[0].suit );
-      toTheVictorGo(2,1);
-    } else if ( playerOneDeck[0].rankPower === playerTwoDeck[0]) {
+  if ( (playerOneDeck.length > 0) && ( playerTwoDeck.length > 0) ) {
+    if ( playerOneTopCard.rankPower > playerTwoTopCard.rankPower) {
+      print("P1 wins: " + playerOneTopCard.rank + playerOneTopCard.suit + " beats " + playerTwoTopCard.rank + playerTwoTopCard.suit );
+      playerOneDeck.push(playerOneTopCard, playerTwoTopCard);
+    } else if ( playerTwoTopCard.rankPower > playerOneTopCard.rankPower ) {
+      print("P2 wins: " + playerTwoTopCard.rank + playerTwoTopCard.suit + " beats " + playerOneTopCard.rank + playerOneTopCard.suit );
+      playerTwoDeck.push(playerTwoTopCard, playerOneTopCard);
+    } else if ( playerOneTopCard.rankPower === playerTwoTopCard.rankPower) {
+      playerOneDeck.unshift(playerOneTopCard);
+      playerTwoDeck.unshift(playerTwoTopCard);
       ofCourseYouRealizeThisMeans();
     }
   }
@@ -154,12 +115,66 @@ function playWar() {
   }
 }
 
-//Assigns appropriate cards to the winner
-// instead of passing in a number, pass in the from deck, to deck
-function toTheVictorGo (victoriousPlayer, indexRange){
-  if (victoriousPlayer === 1){
-    playerOneDeck = playerOneDeck.concat(playerTwoDeck.splice(0,indexRange), playerOneDeck.splice(0,indexRange));
-  } else {
-    playerTwoDeck = playerTwoDeck.concat(playerOneDeck.splice(0,indexRange), playerTwoDeck.splice(0,indexRange));
+//Function that handles war events
+function ofCourseYouRealizeThisMeans(){
+  //warceptionCounter counts the number of consecutive wars
+  print("War breaks out!")
+  var warceptionCounter = 0;
+  var playerOneDeckCards = playerOneDeck.length;
+  var playerTwoDeckCards = playerTwoDeck.length;
+  var minimumDeck = ((playerOneDeckCards < playerTwoDeckCards) ? playerOneDeckCards : playerTwoDeckCards);
+  var CARDS_DRAWN_PER_WAR = 4;
+  //While loop deals with iterative war: double war, triple war, quadruple war, etc
+  for ( faceUpIndex = 0; faceUpIndex < minimumDeck.length; faceUpIndex += CARDS_DRAWN_PER_WAR ) {
+    if (playerOneDeck[faceUpIndex]===playerTwoDeck[faceUpIndex]) {
+      warceptionCounter++;
+    }
   }
-}
+
+  print("It's war-ception! This war is " + warceptionCounter + "wars deep...");
+
+  indexOfFinalConflict = warceptionCounter * CARDS_DRAWN_PER_WAR + CARDS_DRAWN_PER_WAR;
+    if ( playerOneDeckCards < indexOfFinalConflict || playerTwoDeckCards < indexOfFinalConflict ) {
+      // At least one player does have enough cards to continue the war
+      var playerOneBottomCard = playerOneDeck.shift();
+      var playerTwoBottomCard = playerTwoDeck.shift();
+      if (playerOneBottomCard.rankPower > playerTwoBottomCard.rankPower) {
+        playerOneDeck.push(playerOneBottomCard, playerTwoBottomCard);
+        print("Player One Wins!");
+      } else if (playerTwoBottomCard.rankPower > playerOneBottomCard.rankPower) {
+        playerTwoDeck.push(playerTwoBottomCard, playerOneBottomCard);
+        print("Player Two Wins!");
+      } else if (playerOneBottomCard.rankPower === playerTwoBottomCard.rankPower) {
+        if (playerOneBottomCard.suitPower > playerTwoBottomCard.suitPower){
+          print("Player One Wins based on suit-- a rare and narrow victory!");
+        } else {
+          print("Player Two Wins based on suit-- a rare and narrow victory!");
+        }
+      }
+    } else {
+      var playerOneDecisiveCard = playerOneDeck[indexOfFinalConflict].rankPower;
+      var playerTwoDecisiveCard = playerTwoDeck[indexOfFinalConflict].rankPower;
+
+      if (warceptionCounter === 2 ) {
+        print("Double your treasure! Except for the loser.");
+      } else if (warceptionCounter === 3 ) {
+        print("Wow, this war is pretty nuts.");
+      } else if (warceptionCounter === 4 ) {
+        print("The insane brutality actually possesses a sublime quality.");
+      } else if (warceptionCounter === 5) {
+        print("More like 'zero-sun game' amirite? #NuclearWinter");
+      } else if (warceptionCounter === 6 ) {
+        print("GLOBAL THERMONUCLEAR WAR!!!!");
+        print("Seriously, the odds of this having occurred are like absurdly low.");
+        print("Holy shhhh");
+      }
+
+      if (playerOneDecisiveCard > playerTwoDecisiveCard) {
+        print ("Player 1 emerges victorious, capturing " + indexOfFinalConflict +" cards.");
+        playerOneDeck.concat(playerOneDeck.splice(0,indexOfFinalConflict), playerTwoDeck.splice(0,indexOfFinalConflict));
+      } else {
+        print ("Player 2 emerges victorious, capturing " + indexOfFinalConflict +" cards.");
+        playerTwoDeck.concat(playerTwoDeck.splice(0,indexOfFinalConflict), playerOneDeck.splice(0,indexOfFinalConflict));
+      }
+    }
+  }
